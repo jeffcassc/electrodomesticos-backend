@@ -1,0 +1,69 @@
+name: 'Terraform'
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+env:
+  AWS_REGION: "us-west-1"
+  TF_VERSION: "1.5.0"
+
+jobs:
+  terraform:
+    name: 'Terraform'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Create JWT Layer
+        run: |
+          mkdir -p layers/python/lib/python3.9/site-packages
+          pip install PyJWT==2.8.0 cryptography==38.0.4 --target layers/python/lib/python3.9/site-packages
+          cd layers
+          zip -r -9 jwt_layer.zip python
+          # Verificación crítica
+          unzip -l jwt_layer.zip | grep -E 'jwt/|cryptography/'
+
+      - name: Verify Layer Content
+        run: |
+          ls -lh layers/jwt_layer.zip
+          unzip -l layers/jwt_layer.zip | grep -E 'cryptography|jwt'
+          unzip -p layers/jwt_layer.zip python/lib/python3.9/site-packages/cryptography/__about__.py | grep version
+                
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: ${{ env.TF_VERSION }}
+
+      - name: Terraform Init
+        run: terraform init -input=false
+        working-directory: ./terraform
+
+      - name: Terraform Validate
+        run: terraform validate -no-color
+        working-directory: ./terraform
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -no-color
+        working-directory: ./terraform
+        continue-on-error: true
+
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/main'
+        run: terraform apply -auto-approve -input=false
+        working-directory: ./terraform
