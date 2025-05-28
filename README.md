@@ -36,6 +36,3 @@ Este proyecto implementa un backend serverless para administrar una tienda de el
 4. Haz push a la rama (`git push origin feature/awesome-feature`)
 5. Abre un Pull Request
 
-
-
-hola
