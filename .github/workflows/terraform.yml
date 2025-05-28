@@ -1,4 +1,4 @@
-name: 'Terraform'
+name: 'Terraform CI/CD'
 
 on:
   push:
@@ -11,11 +11,14 @@ env:
 
 jobs:
   terraform:
-    name: 'Terraform'
+    name: 'Terraform Deployment'
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./terraform
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
@@ -29,7 +32,6 @@ jobs:
           pip install PyJWT==2.8.0 cryptography==38.0.4 --target layers/python/lib/python3.9/site-packages
           cd layers
           zip -r -9 jwt_layer.zip python
-          # Verificación crítica
           unzip -l jwt_layer.zip | grep -E 'jwt/|cryptography/'
 
       - name: Verify Layer Content
@@ -37,7 +39,7 @@ jobs:
           ls -lh layers/jwt_layer.zip
           unzip -l layers/jwt_layer.zip | grep -E 'cryptography|jwt'
           unzip -p layers/jwt_layer.zip python/lib/python3.9/site-packages/cryptography/__about__.py | grep version
-                
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -49,21 +51,25 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TF_VERSION }}
+          terraform_wrapper: false
 
       - name: Terraform Init
         run: terraform init -input=false
-        working-directory: ./terraform
+
+      - name: Terraform Format
+        run: terraform fmt -check
 
       - name: Terraform Validate
         run: terraform validate -no-color
-        working-directory: ./terraform
 
       - name: Terraform Plan
         run: terraform plan -input=false -no-color
-        working-directory: ./terraform
         continue-on-error: true
+
+      - name: Terraform Destroy (if needed)
+        if: github.ref == 'refs/heads/main'
+        run: terraform destroy -auto-approve -input=false
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
         run: terraform apply -auto-approve -input=false
-        working-directory: ./terraform

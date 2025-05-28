@@ -5,6 +5,12 @@
 *.tfvars
 .terraform.lock.hcl
 
+# Terraform
+.terraform/
+
+
+**/.terraform/providers/
+
 # Archivos de Terraform providers (binarios grandes)
 **/terraform/providers/
 
