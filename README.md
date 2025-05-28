@@ -28,11 +28,5 @@ Este proyecto implementa un backend serverless para administrar una tienda de el
 - GET /product - Listar productos
 - POST /cart - Crear carrito (requiere autenticación)
 
-## Contribución
 
-1. Haz fork del proyecto
-2. Crea una rama para tu feature (`git checkout -b feature/awesome-feature`)
-3. Haz commit de tus cambios (`git commit -am 'Add awesome feature'`)
-4. Haz push a la rama (`git push origin feature/awesome-feature`)
-5. Abre un Pull Request
 
