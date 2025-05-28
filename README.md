@@ -1,6 +1,6 @@
 # Backend para Tienda de Electrodomésticos
 
-Este proyecto implementa un backend serverless para administrar una tienda de electrodomésticos usando AWS Lambda, DynamoDB y API Gateway.
+Este proyecto implementa un backend serverless para administrar una tienda de electrodomésticos usando AWS Lambda, DynamoDB y API Gateway. 
 
 ## Requisitos
 
@@ -35,3 +35,7 @@ Este proyecto implementa un backend serverless para administrar una tienda de el
 3. Haz commit de tus cambios (`git commit -am 'Add awesome feature'`)
 4. Haz push a la rama (`git push origin feature/awesome-feature`)
 5. Abre un Pull Request
+
+
+
+hola
