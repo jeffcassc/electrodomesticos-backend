@@ -1,0 +1,33 @@
+# Terraform y archivos de infraestructura
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+*.tfvars
+.terraform.lock.hcl
+
+# Archivos de Terraform providers (binarios grandes)
+**/terraform/providers/
+
+# Archivos de Python (para tus Lambdas)
+__pycache__/
+*.py[cod]
+*.so
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Archivos del sistema
+.DS_Store
+Thumbs.db
+
+# Archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Archivos generados por Lambda/local
+*.zip
