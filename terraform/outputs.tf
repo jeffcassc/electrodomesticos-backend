@@ -21,10 +21,10 @@ output "cart_table_name" {
 output "lambda_functions" {
   description = "Nombres de las funciones Lambda creadas"
   value = {
-    user_register  = module.lambdas.user_register_function_name
-    user_login     = module.lambdas.user_login_function_name
+    user_register = module.lambdas.user_register_function_name
+    user_login    = module.lambdas.user_login_function_name
     product_create = module.lambdas.product_create_function_name
-    product_list   = module.lambdas.product_list_function_name
-    cart_create    = module.lambdas.cart_create_function_name
+    product_list = module.lambdas.product_list_function_name
+    cart_create = module.lambdas.cart_create_function_name
   }
 }
